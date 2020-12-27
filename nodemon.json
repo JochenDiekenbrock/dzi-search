@@ -1,0 +1,10 @@
+{
+  "delay": 0,
+  "execMap": {
+    "ts": "ts-node --project src/scraper/tsconfig.json"
+  },
+  "watch": ["src/scraper/*.ts"],
+  "events": {
+    "start": "eslint 'src/scraper/*.ts'"
+  }
+}
