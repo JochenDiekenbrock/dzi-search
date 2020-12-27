@@ -7,6 +7,8 @@
     "react-dom": "17.0.1",
     "react-scripts": "4.0.1",
     "styled-components": "5.2.1",
+    "scrape-it": "5.2.4",
+    "ts-node": "9.1.1",
     "web-vitals": "1.0.1"
   },
   "devDependencies": {
@@ -26,6 +28,7 @@
   },
   "scripts": {
     "start": "BROWSER=none react-scripts start",
+    "scrape": "ts-node --project src/scraper/tsconfig.json src/scraper/scraper",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
