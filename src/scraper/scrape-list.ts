@@ -1,9 +1,6 @@
 import scrapeIt from 'scrape-it';
+import { Organization } from './organization';
 
-export interface Organization {
-  title: string;
-  url: string;
-}
 export interface List {
   organizations: Organization[];
 }

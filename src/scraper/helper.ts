@@ -6,15 +6,15 @@ export const wait = (delayInMs: number): Promise<void> =>
 export const readOrExecute = async <T>(
   filename: string,
   executeFn: () => Promise<T>
-): Promise<T> => {
+): Promise<{ data: T; executed: boolean }> => {
   try {
     const content = fs.readFileSync(filename, { encoding: 'utf8' });
-    return JSON.parse(content);
+    return { data: JSON.parse(content), executed: false };
   } catch (e) {
     const executeResult = await executeFn();
     fs.writeFileSync(filename, JSON.stringify(executeResult), {
       encoding: 'utf8'
     });
-    return executeResult;
+    return { data: executeResult, executed: true };
   }
 };
