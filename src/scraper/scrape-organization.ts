@@ -1,5 +1,5 @@
 import scrapeIt, { ScrapeOptions } from 'scrape-it';
-import { Organization } from './organization';
+import { Organization } from '../organization';
 
 export const scrapeOrganization = async (
   organization: Organization

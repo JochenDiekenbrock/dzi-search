@@ -1,13 +1,13 @@
 import * as fs from 'fs';
 import { mkdirSync } from 'fs';
 import { readOrExecute, wait } from './helper';
-import { Organization } from './organization';
+import { Organization } from '../organization';
 import { List, scrapeList } from './scrape-list';
 import { scrapeOrganization } from './scrape-organization';
 import { Overview, scrapeOverview } from './scrape-overview';
 
 const FETCH_DELAY_IN_MS = 1000; // don't DOS the server
-const DATA_DIR = './DATA/';
+const DATA_DIR = './public/DATA/';
 const TEMP_DATA_DIR = './DATA/temp/';
 
 const scrapeOrganizations = async (

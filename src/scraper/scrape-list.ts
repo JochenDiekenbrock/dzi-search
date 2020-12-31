@@ -1,5 +1,5 @@
 import scrapeIt from 'scrape-it';
-import { Organization } from './organization';
+import { Organization } from '../organization';
 
 export interface List {
   organizations: Organization[];
