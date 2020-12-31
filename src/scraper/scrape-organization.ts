@@ -5,16 +5,6 @@ export const scrapeOrganization = async (
   organization: Organization
 ): Promise<Organization | undefined> => {
   const opts: ScrapeOptions = {
-    volltext: {
-      selector: 'article',
-      convert: (text: string) => {
-        text = text.replace(/ +/g, ' ');
-        text = text.replace(/\t/g, '');
-        text = text.replace(/ *[\r\n]+ */g, '\n');
-        text = text.replace(/[\r\n]+/g, '\n');
-        return text;
-      }
-    },
     weltanschaulicheAusrichtung: {
       selector: '.orgaboxtext strong:contains("Weltanschauliche Ausrichtung")',
       closest: 'p',
@@ -36,6 +26,16 @@ export const scrapeOrganization = async (
           how: (elem) => elem.next('td').text()
         }
       }
+    },
+    volltext: {
+      selector: 'article',
+      convert: (text: string) => {
+        text = text.replace(/ +/g, ' ');
+        text = text.replace(/\t/g, '');
+        text = text.replace(/ *[\r\n]+ */g, '\n');
+        text = text.replace(/[\r\n]+/g, '\n');
+        return text;
+      }
     }
   };
 
@@ -44,11 +44,10 @@ export const scrapeOrganization = async (
   //   response: { statusCode: 200 },
   //   data: scrapeHTML<Organization>(testhtml, opts)
   // };
-  // console.log('scrape-organization.ts:853: result: ', result.data);
 
   if (result.response.statusCode >= 300) {
     return undefined;
   }
 
-  return { ...result.data, ...organization };
+  return { ...organization, ...result.data };
 };
