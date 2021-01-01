@@ -8,22 +8,31 @@ export interface Overview {
 }
 
 export const scrapeOverview = async (): Promise<Overview | undefined> => {
-  const result = await scrapeIt<{ urlData: { url: string }[] }>(URL, {
-    urlData: {
-      listItem: '.pagesaz a',
-      data: {
-        url: {
-          attr: 'href'
+  const result = await scrapeIt<{ pagesaz: { urlData: { url: string }[] } }>(
+    URL,
+    {
+      pagesaz: {
+        selector: '.pagesaz',
+        eq: 0,
+        data: {
+          urlData: {
+            listItem: 'a',
+            data: {
+              url: {
+                attr: 'href'
+              }
+            }
+          }
         }
       }
     }
-  });
+  );
 
   if (result.response.statusCode >= 300) {
     return undefined;
   }
 
-  const urls = result.data.urlData.map((urlData) => urlData.url);
+  const urls = result.data.pagesaz.urlData.map((urlData) => urlData.url);
   const aUrl = urls[0].substring(0, urls[0].length - 1) + 'A';
 
   return {
