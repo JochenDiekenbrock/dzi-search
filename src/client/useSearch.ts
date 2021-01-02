@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import MiniSearch, { SearchResult } from 'minisearch';
+import MiniSearch from 'minisearch';
 import { Organization } from '../organization';
 
-const useData = (): Organization[] | undefined => {
+export const useData = (): Organization[] | undefined => {
   const [organizations, setOrganizations] = useState<
     Organization[] | undefined
   >(undefined);
@@ -24,13 +24,13 @@ const useData = (): Organization[] | undefined => {
     load().then((result) => setOrganizations(result));
   }, []);
 
-  console.log('useSearch.ts: useData: organizations: ', organizations);
+  // console.log('useSearch.ts: useData: organizations: ', organizations);
   return organizations;
 };
 
 const useMiniSearch = (): MiniSearch<Organization> => {
   const organizations = useData();
-  console.log('useSearch.ts:useMiniSearch called');
+  // console.log('useSearch.ts:useMiniSearch called');
 
   return useMemo(() => {
     const miniSearch = new MiniSearch<Organization>({
@@ -42,7 +42,10 @@ const useMiniSearch = (): MiniSearch<Organization> => {
         'weltanschaulicheAusrichtung',
         'finanzen',
         'volltext'
-      ]
+      ],
+      searchOptions: {
+        prefix: true
+      }
     });
 
     if (organizations) {
@@ -53,9 +56,12 @@ const useMiniSearch = (): MiniSearch<Organization> => {
   }, [organizations]);
 };
 
-export const useSearch = (searchTerm: string): Organization[] => {
+export const useSearch = (searchTerm: string): Promise<Organization[]> => {
+  console.log('useSearch.ts, useSearch searchTerm: ', searchTerm);
   const miniSearch = useMiniSearch();
-  const searchResults = miniSearch.search(searchTerm);
-  console.log('useSearch.ts: useSearch: ', searchResults);
-  return (searchResults as unknown) as Organization[];
+  return new Promise((resolve) => {
+    const searchResults = miniSearch.search(searchTerm);
+    console.log('useSearch.ts: useSearch: ', searchResults);
+    resolve((searchResults as unknown) as Organization[]);
+  });
 };
