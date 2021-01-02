@@ -1,21 +1,29 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { Organization } from '../organization';
-import { useSearch } from './useSearch';
+import { useSearch } from './use-search';
 
 export interface SearchResultsProps {
   searchTerm: string;
+  ausrichtungFacet?: string;
 }
 export const SearchResults: FC<SearchResultsProps> = (props) => {
   const [searchResults, setSearchResults] = useState<Organization[]>([]);
 
-  useSearch(props.searchTerm).then((result) => {
+  console.log('search-results.tsx:13: props: ', props);
+
+  useSearch({
+    searchTerm: props.searchTerm,
+    ausrichtungFacet: props.ausrichtungFacet
+  }).then((result) => {
     const searchResultsHaveChanged = searchResults.length !== result.length;
 
     if (searchResultsHaveChanged) {
       setSearchResults(result);
     }
   });
+
+  console.log('search-results.tsx:24: searchResults: ', searchResults);
 
   return (
     <>

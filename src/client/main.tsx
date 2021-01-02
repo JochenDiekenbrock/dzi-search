@@ -1,10 +1,14 @@
 import { FC, useEffect, useState } from 'react';
 import { Organization } from '../organization';
+import { Facets } from './facets';
 import { SearchResults } from './search-results';
-import { useData, useSearch } from './useSearch';
+import { useData } from './use-data';
 
 export const Main: FC = () => {
   const [allOrganizations, setAllOrganizations] = useState<Organization[]>([]);
+  const [ausrichtungFacet, setAusrichtungFacet] = useState<
+    string | undefined
+  >();
 
   const [searchTerm, setSearchTerm] = useState<string>('');
 
@@ -27,6 +31,13 @@ export const Main: FC = () => {
         Datenbank des <a href="https://www.dzi.de/">DZI</a> (Deutsches
         Zentralinstitut für soziale Fragen)
       </p>
+      <div>
+        <Facets
+          searchTerm={searchTerm}
+          ausrichtungFacet={ausrichtungFacet}
+          onAusrichtungFacetChanged={(facet) => setAusrichtungFacet(facet)}
+        />
+      </div>
       <p>
         <label>
           Suche:{' '}
@@ -38,7 +49,10 @@ export const Main: FC = () => {
           />
         </label>
       </p>
-      <SearchResults searchTerm={searchTerm} />
+      <SearchResults
+        searchTerm={searchTerm}
+        ausrichtungFacet={ausrichtungFacet}
+      />
     </>
   );
 };
