@@ -1,27 +1,25 @@
-import { FC, useEffect, useState } from 'react';
-import { Organization } from '../organization';
+import { FC, useState } from 'react';
 import { Facets } from './facets';
 import { SearchResults } from './search-results';
-import { useData } from './use-data';
+import { SearchParameter, SearchResult, useSearch } from './use-search';
 
 export const Main: FC = () => {
-  const [allOrganizations, setAllOrganizations] = useState<Organization[]>([]);
-  const [ausrichtungFacet, setAusrichtungFacet] = useState<
-    string | undefined
-  >();
+  const [searchParameter, setSearchParameter] = useState<SearchParameter>({
+    searchTerm: ''
+  });
 
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchResult, setSearchResult] = useState<SearchResult>({
+    anteilKostenFacets: {},
+    ausrichtungFacets: {},
+    organizations: []
+  });
 
-  const allOrgs = useData();
-  useEffect(() => {
-    console.log('main.tsx:17: : ');
-    setAllOrganizations(allOrgs || []);
-  }, [allOrgs]);
-
-  console.log(
-    'main.tsx:22: allOrganizations.length: ',
-    allOrganizations.length
-  );
+  useSearch(searchParameter).then((result) => {
+    console.log('main.tsx:24: result: ', result);
+    if (JSON.stringify(result) !== JSON.stringify(searchResult)) {
+      setSearchResult(result);
+    }
+  });
 
   return (
     <>
@@ -33,9 +31,14 @@ export const Main: FC = () => {
       </p>
       <div>
         <Facets
-          searchTerm={searchTerm}
-          ausrichtungFacet={ausrichtungFacet}
-          onAusrichtungFacetChanged={(facet) => setAusrichtungFacet(facet)}
+          searchParameter={searchParameter}
+          searchResult={searchResult}
+          onKostenAnteilFacetChanged={(facet) =>
+            setSearchParameter({ ...searchParameter, anteilKostenFacet: facet })
+          }
+          onAusrichtungFacetChanged={(facet) =>
+            setSearchParameter({ ...searchParameter, ausrichtungFacet: facet })
+          }
         />
       </div>
       <p>
@@ -44,15 +47,15 @@ export const Main: FC = () => {
           <input
             type="text"
             onChange={(event) => {
-              setSearchTerm(event.target.value);
+              setSearchParameter({
+                ...searchParameter,
+                searchTerm: event.target.value
+              });
             }}
           />
         </label>
       </p>
-      <SearchResults
-        searchTerm={searchTerm}
-        ausrichtungFacet={ausrichtungFacet}
-      />
+      <SearchResults searchResult={searchResult} />
     </>
   );
 };
