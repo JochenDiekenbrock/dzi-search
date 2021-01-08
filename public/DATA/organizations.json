@@ -1,0 +1,16 @@
+{
+  "scrapedAt": 1610122424155,
+  "organizations": [
+    {
+      "title": "My Org",
+      "url": "https://www.dzi.de/organisation/myorg/",
+      "weltanschaulicheAusrichtung": "unabhängig",
+      "finanzen": {
+        "bezugsjahr": 2019,
+        "gesamtEinnahmen": "12.345.678,99 EUR",
+        "anteilKosten": "niedrig"
+      },
+      "volltext": "Arbeitsschwerpunkte\n usw."
+    }
+ ]
+}
