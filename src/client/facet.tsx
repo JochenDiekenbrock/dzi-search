@@ -39,6 +39,7 @@ const FacetPane = styled.div`
 
 const FacetGrid = styled.div`
   display: grid;
+  align-items: center;
   grid-gap: 1rem;
   grid-auto-columns: max-content;
   grid-auto-flow: column;

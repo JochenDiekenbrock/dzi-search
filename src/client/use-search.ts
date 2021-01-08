@@ -40,6 +40,7 @@ export interface SearchParameter {
 
 const calculateFacets = (
   organizations: Organization[],
+  selectedFacet: string | undefined,
   facet: 'Ausrichtung' | 'AnteilKosten'
 ): Facets => {
   const facets: { [facet: string]: number } = {};
@@ -56,6 +57,11 @@ const calculateFacets = (
       }
     }
   });
+
+  if (selectedFacet) {
+    return { [selectedFacet]: facets[selectedFacet] };
+  }
+
   return facets;
 };
 
@@ -93,19 +99,32 @@ export const useSearch = (
   const miniSearch = useMiniSearch();
   const allOrganizations = useData() || [];
   return new Promise((resolve) => {
-    const organizations = (miniSearch.search(searchParam.searchTerm || '', {
-      filter: (result) =>
-        filterFacets(
-          result,
-          searchParam.ausrichtungFacet,
-          searchParam.anteilKostenFacet
-        )
-    }) as unknown) as Organization[];
+    const MATCH_ALL = 'Arbeitsschwerpunkte';
+
+    const organizations = (miniSearch.search(
+      searchParam.searchTerm || MATCH_ALL,
+      {
+        filter: (result) =>
+          filterFacets(
+            result,
+            searchParam.ausrichtungFacet,
+            searchParam.anteilKostenFacet
+          )
+      }
+    ) as unknown) as Organization[];
 
     const facetOrgs =
       organizations.length > 0 ? organizations : allOrganizations;
-    const anteilKostenFacets = calculateFacets(facetOrgs, 'AnteilKosten');
-    const ausrichtungFacets = calculateFacets(facetOrgs, 'Ausrichtung');
+    const anteilKostenFacets = calculateFacets(
+      facetOrgs,
+      searchParam.anteilKostenFacet,
+      'AnteilKosten'
+    );
+    const ausrichtungFacets = calculateFacets(
+      facetOrgs,
+      searchParam.ausrichtungFacet,
+      'Ausrichtung'
+    );
     const result: SearchResult = {
       organizations,
       anteilKostenFacets,

@@ -10,7 +10,9 @@ export const SearchResults: FC<SearchResultsProps> = (props) => (
     {props.searchResult.organizations &&
       props.searchResult.organizations.map((organization) => (
         <OrganizationLine key={organization.url}>
-          <a href={organization.url}>{organization.title}</a>
+          <a target="_blank" rel="noreferrer noopener" href={organization.url}>
+            {organization.title}
+          </a>
         </OrganizationLine>
       ))}
   </div>
