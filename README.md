@@ -3,7 +3,7 @@ dzi-search implements an advanced search for organizations with the
 donation certificate ("Spendensiegel") of the
 [DZI (Deutsches Zentralinstitut für soziale Fragen)](https://www.dzi.de)
 
-**Sample data is provided in the repository. Please note that this data will probably be outdated!**
+**No data is provided. You need to scrape data before using the search.**
 
 ### Scraping new organization data
 
