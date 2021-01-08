@@ -9,3 +9,8 @@ export interface Organization {
     anteilKosten: string;
   };
 }
+
+export interface OrganizationData {
+  scrapedAt: number;
+  organizations: Organization[];
+}

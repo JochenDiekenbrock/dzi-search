@@ -4,6 +4,8 @@ import { Organization } from '../organization';
 export const scrapeOrganization = async (
   organization: Organization
 ): Promise<Organization | undefined> => {
+  console.log(`Scraping ${organization.title}`);
+
   const opts: ScrapeOptions = {
     weltanschaulicheAusrichtung: {
       selector: '.orgaboxtext strong:contains("Weltanschauliche Ausrichtung")',

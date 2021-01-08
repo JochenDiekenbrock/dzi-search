@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import { Facets } from './facets';
 import { SearchResults } from './search-results';
+import { useData } from './use-data';
 import { SearchParameter, SearchResult, useSearch } from './use-search';
 
 export const Main: FC = () => {
@@ -15,15 +16,22 @@ export const Main: FC = () => {
   });
 
   useSearch(searchParameter).then((result) => {
-    console.log('main.tsx:24: result: ', result);
     if (JSON.stringify(result) !== JSON.stringify(searchResult)) {
       setSearchResult(result);
     }
   });
 
+  const organizationData = useData();
+
   return (
     <>
       <h1>Suche nach Hilfsorganisationen mit Spendensiegel</h1>
+      {organizationData && (
+        <p>
+          Stand der Daten:{' '}
+          {new Date(organizationData?.scrapedAt).toLocaleString()}
+        </p>
+      )}
       <p>
         Erweiterte Suche nach Hilfsorganisationen mit Spendensiegel in der
         Datenbank des <a href="https://www.dzi.de/">DZI</a> (Deutsches

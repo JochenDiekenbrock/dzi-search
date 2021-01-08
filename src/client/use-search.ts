@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
 import MiniSearch, { SearchResult as MsSearchResult } from 'minisearch';
+import { useMemo } from 'react';
 import { Organization } from '../organization';
 import { useData } from './use-data';
 
 const useMiniSearch = (): MiniSearch<Organization> => {
   const organizations = useData();
-  // console.log('useSearch.ts:useMiniSearch called');
 
   return useMemo(() => {
     const miniSearch = new MiniSearch<Organization>({
@@ -25,9 +24,8 @@ const useMiniSearch = (): MiniSearch<Organization> => {
     });
 
     if (organizations) {
-      miniSearch.addAll(organizations);
+      miniSearch.addAll(organizations.organizations);
     }
-    console.log(`useSearch.ts: ${miniSearch.documentCount} indexed`);
     return miniSearch;
   }, [organizations]);
 };
@@ -75,13 +73,7 @@ const filterFacets = (
     ausrichtungFacet === result.weltanschaulicheAusrichtung;
   const isAnteilKostenFacet =
     !anteilKostenFacet || anteilKostenFacet === result.finanzen?.anteilKosten;
-  const match = isAusrichtungFacet && isAnteilKostenFacet;
-  console.log(
-    'use-search.ts:46: result, match: ',
-    result.weltanschaulicheAusrichtung,
-    match
-  );
-  return match;
+  return isAusrichtungFacet && isAnteilKostenFacet;
 };
 
 export interface Facets {
@@ -95,9 +87,8 @@ export interface SearchResult {
 export const useSearch = (
   searchParam: SearchParameter
 ): Promise<SearchResult> => {
-  console.log('useSearch.ts, useSearch searchParam: ', searchParam);
   const miniSearch = useMiniSearch();
-  const allOrganizations = useData() || [];
+  const organizationData = useData();
   return new Promise((resolve) => {
     const MATCH_ALL = 'Arbeitsschwerpunkte';
 
@@ -114,7 +105,9 @@ export const useSearch = (
     ) as unknown) as Organization[];
 
     const facetOrgs =
-      organizations.length > 0 ? organizations : allOrganizations;
+      organizations.length > 0
+        ? organizations
+        : organizationData?.organizations ?? [];
     const anteilKostenFacets = calculateFacets(
       facetOrgs,
       searchParam.anteilKostenFacet,
@@ -131,7 +124,6 @@ export const useSearch = (
       ausrichtungFacets
     };
 
-    console.log('useSearch.ts: result: ', result);
     resolve(result);
   });
 };

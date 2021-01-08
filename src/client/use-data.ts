@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Organization } from '../organization';
+import { OrganizationData } from '../organization';
 
-export const useData = (): Organization[] | undefined => {
-  const [organizations, setOrganizations] = useState<
-    Organization[] | undefined
+export const useData = (): OrganizationData | undefined => {
+  const [organizationData, setOrganizationData] = useState<
+    OrganizationData | undefined
   >(undefined);
 
   useEffect(() => {
     const load = async () => {
-      const response = await fetch('DATA/organizations.json');
-      console.log('response: ', response);
+      const response = await fetch('DATA/organizations.json', {
+        cache: 'no-cache'
+      });
 
       if (response.status < 200 || response.status >= 300) {
         console.error(
@@ -20,9 +21,8 @@ export const useData = (): Organization[] | undefined => {
       return await response.json();
     };
 
-    load().then((result) => setOrganizations(result));
+    load().then((result) => setOrganizationData(result));
   }, []);
 
-  // console.log('useSearch.ts: useData: organizations: ', organizations);
-  return organizations;
+  return organizationData;
 };

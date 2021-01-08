@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { mkdirSync } from 'fs';
 import { readOrExecute, wait } from './helper';
-import { Organization } from '../organization';
+import { Organization, OrganizationData } from '../organization';
 import { List, scrapeList } from './scrape-list';
 import { scrapeOrganization } from './scrape-organization';
 import { Overview, scrapeOverview } from './scrape-overview';
@@ -14,10 +14,7 @@ const scrapeOrganizations = async (
   organizationList: List
 ): Promise<Organization[]> => {
   const result: Organization[] = [];
-  for (const organizationInfo of [
-    organizationList.organizations[0],
-    organizationList.organizations[1]
-  ]) {
+  for (const organizationInfo of organizationList.organizations) {
     if (organizationInfo) {
       const filename = organizationInfo.url
         .replace(/https:\/\/www.dzi.de\//, '')
@@ -41,7 +38,7 @@ const scrapeOrganizations = async (
   return result;
 };
 
-const scrape = async (): Promise<Organization[]> => {
+const scrape = async (): Promise<OrganizationData> => {
   const { data: overview } = await readOrExecute<Overview | undefined>(
     `${TEMP_DATA_DIR}overview.json`,
     scrapeOverview
@@ -66,7 +63,7 @@ const scrape = async (): Promise<Organization[]> => {
     organizations.push(...(await scrapeOrganizations(organizationList)));
   }
 
-  return organizations;
+  return { scrapedAt: Date.now(), organizations };
 };
 
 const run = async () => {
